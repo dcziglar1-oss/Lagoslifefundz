@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00ff66" />
+  <title>Lagos Life TopUp Hub</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-2: #0c110d;
+      --panel: #0d0d0d;
+      --panel-2: #121912;
+      --line: rgba(255,255,255,0.08);
+      --text: #edfdf2;
+      --muted: #9aa3a0;
+      --green: #00ff66;
+      --green-2: #12d761;
+      --green-3: #0d8f46;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0,255,102,0.08), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(0,255,102,0.05), transparent 20%),
+        linear-gradient(180deg, #000000 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button, input, select { font: inherit; }
+
+    .container {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(12, 12, 12, 0.82);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav {
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #0a140d, #052a12);
+      border: 1px solid rgba(0,255,102,0.15);
+      color: var(--green);
+      box-shadow: 0 0 18px rgba(0,255,102,0.12);
+      font-weight: 900;
+    }
+
+    .brand-text small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, var(--green) 0%, var(--green-2) 100%);
+      color: #021a0b;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,255,102,.18);
+    }
+
+    .hero {
+      padding: 38px 0 18px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.45fr 0.75fr;
+      align-items: center;
+      gap: 28px;
+      min-height: 440px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(0,255,102,.08);
+      border: 1px solid rgba(0,255,102,.16);
+      border-radius: 999px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(0,255,102,.9);
+    }
+
+    h1 {
+      margin: 18px 0 16px;
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      line-height: 1.05;
+      letter-spacing: -1.3px;
+      font-weight: 900;
+    }
+
+    .hero-text {
+      max-width: 630px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      margin-bottom: 24px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(180deg, var(--green) 0%, var(--green-2) 100%);
+      color: #031a0b;
+      box-shadow: 0 12px 25px rgba(0,255,102,.18);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .stat {
+      min-width: 120px;
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--green);
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .hero-card {
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(17,17,17,.96), rgba(11,15,12,.96)),
+        linear-gradient(135deg, rgba(0,255,102,.08), rgba(255,255,255,.02));
+      border: 1px solid rgba(0,255,102,.18);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,255,102,.08), transparent 38%);
+      pointer-events: none;
+    }
+
+    .mini-label {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,255,102,.08);
+      border: 1px solid rgba(0,255,102,.16);
+      color: var(--green);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+
+    .chip::before {
+      content: "";
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(0,255,102,.8);
+    }
+
+    .balance-box {
+      margin-top: 16px;
+      background: rgba(0,0,0,.2);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .balance-box .label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .amount {
+      margin-top: 8px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--green);
+    }
+
+    .seamless {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    section { padding: 28px 0; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 2.5rem);
+      letter-spacing: -1px;
+    }
+
+    .section-head .small {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .pack-card {
+      position: relative;
+      background: linear-gradient(180deg, rgba(17,17,17,.97), rgba(9,9,9,.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 270px;
+    }
+
+    .pack-card.vip {
+      border-color: rgba(0,255,102,.28);
+      background: linear-gradient(180deg, rgba(8,17,11,.96), rgba(5,7,5,.98));
+      box-shadow: 0 22px 65px rgba(0,255,102,.08);
+    }
+
+    .vip-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, var(--green) 0%, var(--green-2) 100%);
+      color: #04180a;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      box-shadow: 0 12px 25px rgba(0,255,102,.18);
+      white-space: nowrap;
+    }
+
+    .pack-card .label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      width: max-content;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: 999px;
+    }
+
+    .pack-card .amount {
+      font-size: 1.7rem;
+      margin-top: 16px;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .pack-card .value {
+      font-size: 2rem;
+      line-height: 1.08;
+      letter-spacing: -1px;
+      margin: 10px 0;
+      font-weight: 900;
+    }
+
+    .pack-card .tagline {
+      color: var(--muted);
+      font-size: 0.95rem;
+      min-height: 48px;
+      margin-bottom: 18px;
+    }
+
+    .buy-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .price {
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .small-btn {
+      background: linear-gradient(180deg, var(--green) 0%, var(--green-2) 100%);
+      color: #04150a;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,255,102,.12);
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .step {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-no {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(0,255,102,.08);
+      border: 1px solid rgba(0,255,102,.16);
+      color: var(--green);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .step h3 {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .pay-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .pay-item {
+      min-width: 180px;
+      flex: 1 1 180px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .pay-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(0,255,102,.1);
+      border: 1px solid rgba(0,255,102,.16);
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .reviews {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .review {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .review-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(0,255,102,.14), rgba(0,255,102,.04));
+      border: 1px solid rgba(0,255,102,.16);
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .review strong { display: block; }
+    .review .meta {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .review p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .faq {
+      display: grid;
+      gap: 10px;
+    }
+
+    .faq-item {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .faq-answer {
+      display: none;
+      color: var(--muted);
+      padding: 0 18px 16px;
+      font-size: 0.95rem;
+    }
+
+    .faq-item.open .faq-answer { display: block; }
+    .faq-item.open .plus { transform: rotate(45deg); }
+
+    .plus {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(0,255,102,.08);
+      border: 1px solid rgba(0,255,102,.16);
+      color: var(--green);
+      font-size: 18px;
+      transition: transform .15s ease;
+    }
+
+    footer {
+      padding: 16px 0 60px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+    }
+
+    .footer-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .wa-float {
+      position: fixed;
+      right: 22px; bottom: 22px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: linear-gradient(180deg, var(--green) 0%, var(--green-2) 100%);
+      box-shadow: 0 18px 32px rgba(0,255,102,.22);
+      border: 2px solid rgba(255,255,255,.08);
+      animation: pulse 2s infinite;
+      z-index: 80;
+    }
+
+    .wa-float svg { width: 30px; height: 30px; }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,255,102,.32); }
+      70% { box-shadow: 0 0 0 18px rgba(0,255,102,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,255,102,0); }
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .price-grid,
+      .how-grid,
+      .reviews {
+        grid-template-columns: 1fr;
+      }
+      .nav-links { display: none; }
+    }
+
+    @media (max-width: 560px) {
+      .nav { height: 64px; }
+      .nav-btn { display: none; }
+      .hero-actions { flex-direction: column; } 
+      .hero-actions .btn { width: 100%; }
+      .pay-grid { display: grid; grid-template-columns: 1fr; }
+      .pay-item { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-mark">LL</div>
+        <div class="brand-text">
+          Lagos Life TopUp Hub
+          <small>Instant Balance Delivery</small>
+        </div>
+      </div>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#pricing">Pricing</a>
+        <a href="#how">How It Works</a>
+        <a href="#payments">Payments</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <button class="nav-btn" type="button" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Buy Now</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <div class="eyebrow">Trusted, Fast & Secure</div>
+          <h1>Lagos Life Balance Top-Up - Instant Delivery</h1>
+          <p class="hero-text">
+            Cheapest &amp; Fastest Plug For Your Lagos Life Cash. 100% Safe, Legit &amp; Instant Delivery in 1-5 Minutes
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="button" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Top Up Now</button>
+            <button class="btn btn-secondary" type="button" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>1–5 Min</strong>
+              <span>Instant delivery</span>
+            </div>
+            <div class="stat">
+              <strong>24/7</strong>
+              <span>Support</span>
+            </div>
+            <div class="stat">
+              <strong>100%</strong>
+              <span>Secure</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-card" aria-label="Featured offer">
+          <div class="mini-label">Best Seller</div>
+          <div class="chip">VIP Best Value</div>
+
+          <div class="balance-box">
+            <div class="label">Featured Package</div>
+            <div class="amount">₦15T VIP</div>
+            <div style="color:var(--muted); font-size:14px;">Lagos Life Cash Boost</div>
+
+            <div class="seamless">
+              <span>Price: ₦10,000</span>
+              <span class="chip">Instant</span>
+            </div>
+          </div>
+
+          <div class="seamless" style="margin-top:22px;">
+            <span>Verified &amp; Trusted</span>
+            <span>24/7 Support</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <h2>Top Up Packages</h2>
+          <div class="small">Safe • Legit • Fastest in the market</div>
+        </div>
+
+        <div class="section-head" style="margin-top:10px;">
+          <h3 style="margin:0; color:#ebfff0;">REGULAR PACKS</h3>
+        </div>
+
+        <div class="price-grid">
+          <article class="pack-card">
+            <div class="label">Regular</div>
+            <div class="amount">₦1000</div>
+            <div class="value">₦100 Billion</div>
+            <div class="tagline">Quick boost for casual gameplay and daily hustle.</div>
+            <div class="buy-row">
+              <div class="price">₦1,000</div>
+              <button class="small-btn" type="button" onclick="openModal('Regular Pack - ₦1000', 1000)">Buy Now</button>
+            </div>
+          </article>
+
+          <article class="pack-card">
+            <div class="label">Regular</div>
+            <div class="amount">₦2500</div>
+            <div class="value">₦300 Billion</div>
+            <div class="tagline">Great value for players who need steady in-game strength.</div>
+            <div class="buy-row">
+              <div class="price">₦2,500</div>
+              <button class="small-btn" type="button" onclick="openModal('Regular Pack - ₦2500', 2500)">Buy Now</button>
+            </div>
+          </article>
+
+          <article class="pack-card">
+            <div class="label">Regular</div>
+            <div class="amount">₦5000</div>
+            <div class="value">₦700 Billion</div>
+            <div class="tagline">A solid top-up for serious grind and large moves.</div>
+            <div class="buy-row">
+              <div class="price">₦5,000</div>
+              <button class="small-btn" type="button" onclick="openModal('Regular Pack - ₦5000', 5000)">Buy Now</button>
+            </div>
+          </article>
+        </div>
+
+        <div class="section-head" style="margin-top:26px;">
+          <h3 style="margin:0; color:#ebfff0;">VIP PACKS</h3>
+        </div>
+
+        <div class="price-grid">
+          <article class="pack-card vip">
+            <div class="vip-badge">MOST POPULAR</div>
+            <div class="label">VIP</div>
+            <div class="amount">₦7000</div>
+            <div class="value">₦5 Trillion VIP</div>
+            <div class="tagline">Premium value for high-level players and serious upgrades.</div>
+            <div class="buy-row">
+              <div class="price">₦7,000</div>
+              <button class="small-btn" type="button" onclick="openModal('VIP Pack - ₦7000', 7000)">Buy Now</button>
+            </div>
+          </article>
+
+          <article class="pack-card vip">
+            <div class="label">VIP</div>
+            <div class="amount">₦8000</div>
+            <div class="value">₦10 Trillion VIP</div>
+            <div class="tagline">Bigger boost for players running high-risk, high-reward gameplay.</div>
+            <div class="buy-row">
+              <div class="price">₦8,000</div>
+              <button class="small-btn" type="button" onclick="openModal('VIP Pack - ₦8000', 8000)">Buy Now</button>
+            </div>
+          </article>
+
+          <article class="pack-card vip">
+            <div class="label">VIP</div>
+            <div class="amount">₦10000</div>
+            <div class="value">₦15 Trillion VIP</div>
+            <div class="tagline">Best value for the biggest top-ups and premium access.</div>
+            <div class="buy-row">
+              <div class="price">₦10,000</div>
+              <button class="small-btn" type="button" onclick="openModal('VIP Pack - ₦10000', 10000)">Buy Now</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="container">
+        <div class="section-head">
+          <h2>How It Works</h2>
+        </div>
+
+        <div class="how-grid">
+          <div class="step">
+            <div class="step-no">1</div>
+            <div>
+              <h3>Choose Package</h3>
+              <p>Select the exact package that matches your game needs and budget.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-no">2</div>
+            <div>
+              <h3>Enter Player Username and ID and Pay</h3>
+              <p>Fill in your Lagos Life username, player ID and choose your payment method.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-no">3</div>
+            <div>
+              <h3>Receive Balance Instantly</h3>
+              <p>We deliver your balance in 1–5 minutes, fast and safe.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="payments">
+      <div class="container">
+        <div class="section-head">
+          <h2>Payment Methods</h2>
+        </div>
+
+        <div class="pay-grid">
+          <div class="pay-item"><span class="pay-icon">O</span> Opay</div>
+          <div class="pay-item"><span class="pay-icon">P</span> Palmpay</div>
+          <div class="pay-item"><span class="pay-icon">B</span> Bank Transfer</div>
+          <div class="pay-item"><span class="pay-icon">T</span> USDT</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <h2>Testimonials</h2>
+        </div>
+
+        <div class="reviews">
+          <article class="review">
+            <div class="review-top">
+              <div class="avatar">AK</div>
+              <div>
+                <strong>Akin</strong>
+                <span class="meta">Verified Buyer</span>
+              </div>
+            </div>
+            <p>“My balance was credited in less than 2 minutes. Safe, fast, and very legit. I’ll definitely order again.”</p>
+          </article>
+
+          <article class="review">
+            <div class="review-top">
+              <div class="avatar">TV</div>
+              <div>
+                <strong>Tolu V.</strong>
+                <span class="meta">VIP Customer</span>
+              </div>
+            </div>
+            <p>“The VIP package gave me exactly what I needed. Payment went through smoothly and support was available.”</p>
+          </article>
+
+          <article class="review">
+            <div class="review-top">
+              <div class="avatar">EM</div>
+              <div>
+                <strong>Emeka</strong>
+                <span class="meta">Regular Buyer</span>
+              </div>
+            </div>
+            <p>“Very easy process. No stress, no confusion, and the support team responded fast on WhatsApp.”</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container">
+        <div class="section-head">
+          <h2>FAQ</h2>
+        </div>
+
+        <div class="faq">
+          <div class="faq-item open">
+            <button class="faq-question" type="button">
+              <span>Is this service safe and legit?</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="faq-answer">
+              Yes. We prioritize safe transactions, verified methods, and quick delivery. Always make sure your username and player ID are correct before making payment.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>How long does delivery take?</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="faq-answer">
+              Most orders are delivered in 1–5 minutes. VIP orders may take a little longer depending on verification and order volume.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>What if my balance does not arrive?</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="faq-answer">
+              Contact our support immediately. We will confirm your order and resolve the issue quickly.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <div>© <span id="year"></span> Lagos Life TopUp Hub. All rights reserved.</div>
+      <div>Fast • Secure • Legit • Instant</div>
+    </div>
+  </footer>
+
+  <a class="wa-float" href="https://wa.me/2349165732412?text=Hello%20Lagos%20Life%20TopUp%20Hub%2C%20I%20need%20support." target="_blank" rel="noreferrer" aria-label="WhatsApp support">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20.453 3.545A11.944 11.944 0 0 0 12.012 1C6.159 1 1.37 5.79 1.37 11.643c0 2.065.54 4.083 1.565 5.859L1.2 22.8l5.434-1.723a10.664 10.664 0 0 0 5.378 1.711h.002c5.853 0 10.64-4.79 10.64-10.642 0-2.848-1.112-5.53-3.201-7.601Zm-8.441 16.341h-.001a8.876 8.876 0 0 1-4.502-1.226l-.323-.19-3.22 1.02 1.084-3.136-.21-.323A8.879 8.879 0 1 1 12.012 19.89Zm4.895-6.667c-.269-.135-1.585-.781-1.831-.868-.246-.088-.424-.134-.601.133-.177.267-.686.868-.841 1.046-.155.177-.31.2-.579.067-.269-.134-1.136-.418-2.163-1.332-.798-.711-1.338-1.588-1.494-1.856-.155-.267-.017-.412.117-.546.12-.12.268-.31.402-.466.134-.155.178-.267.267-.444.089-.177.045-.333-.022-.467-.067-.134-.6-1.446-.823-1.98-.217-.52-.438-.448-.601-.456l-.512-.009a.98.98 0 0 0-.706.333c-.243.267-.927.905-.927 2.205 0 1.3.95 2.556 1.082 2.733.132.178 1.87 2.857 4.527 4.005 2.658 1.148 2.658.764 3.138.716.48-.047 1.556-.635 1.773-1.249.217-.614.217-1.141.155-1.249-.062-.108-.23-.177-.5-.312Z" fill="#04150a"/>
+    </svg>
+  </a>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.querySelectorAll('.faq-item').forEach((item) => {
+      item.querySelector('.faq-question').addEventListener('click', () => {
+        document.querySelectorAll('.faq-item').forEach((other) => {
+          if (other !== item) other.classList.remove('open');
+        });
+        item.classList.toggle('open');
+      });
+    });
+
+    function openModal(title, amount) {
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.inset = '0';
+      modal.style.background = 'rgba(0,0,0,.75)';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.zIndex = '9999';
+      modal.style.padding = '18px';
+
+      modal.innerHTML = `
+        <div style="width:min(520px,100%); background:#0a0a0a; border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:22px; box-shadow:0 30px 70px rgba(0,0,0,.75);">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px;">
+            <div>
+              <div style="font-size:12px; text-transform:uppercase; letter-spacing:1.2px; color:#9ae9b8; font-weight:800;">Complete Order</div>
+              <h3 style="margin:8px 0 0; font-size:1.4rem; color:#ebfff0;">${title}</h3>
+            </div>
+            <button type="button" onclick="this.closest('div[style*="position:fixed"]')?.remove()" style="background:transparent; color:#effff2; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:10px 12px; cursor:pointer; font-weight:700;">Close</button>
+          </div>
+
+          <form id="orderForm" style="display:grid; gap:12px;">
+            <div>
+              <label style="display:block; color:#afc1b2; font-size:12px; margin-bottom:6px;">Player Username</label>
+              <input type="text" placeholder="e.g. LagosKing" required style="width:100%; background:#050505; color:#eefdf1; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px 14px;" />
+            </div>
+
+            <div>
+              <label style="display:block; color:#afc1b2; font-size:12px; margin-bottom:6px;">Player ID</label>
+              <input type="text" placeholder="Enter your player ID" required style="width:100%; background:#050505; color:#eefdf1; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px 14px;" />
+            </div>
+
+            <div>
+              <label style="display:block; color:#afc1b2; font-size:12px; margin-bottom:6px;">Payment Method</label>
+              <select required style="width:100%; background:#050505; color:#eefdf1; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px 14px;">
+                <option value="Opay">Opay</option>
+                <option value="Palmpay">Palmpay</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="USDT">USDT</option>
+              </select>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:8px;">
+              <div style="color:#b0c3b4; font-weight:700;">Total: ₦${Number(amount).toLocaleString()}</div>
+              <button type="submit" style="background:linear-gradient(180deg, #00ff66 0%, #0ee768 100%); color:#04150a; font-weight:900; border:none; border-radius:10px; padding:12px 18px; cursor:pointer;">Proceed to Pay</button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      const form = modal.querySelector('#orderForm');
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const username = form.querySelector('input[type=text]').value.trim();
+        const userId = form.querySelectorAll('input[type=text]')[1].value.trim();
+        const method = form.querySelector('select').value;
+
+        const success = document.createElement('div');
+        success.style.marginTop = '18px';
+        success.style.borderRadius = '12px';
+        success.style.border = '1px solid rgba(0,255,102,.2)';
+        success.style.background = 'rgba(0,255,102,.06)';
+        success.style.color = '#e9fff0';
+        success.style.padding = '14px 16px';
+        success.style.fontSize = '14px';
+        success.style.lineHeight = '1.6';
+        success.innerHTML = `
+          <strong style="color:#9effb8; display:block; margin-bottom:8px;">Order placed successfully!</strong>
+          Package: ${title}<br>
+          Amount: ₦${Number(amount).toLocaleString()}<br>
+          Player: ${username || 'N/A'}<br>
+          ID: ${userId || 'N/A'}<br>
+          Payment: ${method}
+        `;
+
+        form.replaceWith(success);
+
+        setTimeout(() => {
+          modal.style.opacity = '0';
+          modal.style.transition = 'opacity .2s ease';
+          setTimeout(() => modal.remove(), 220);
+          alert('Thank you! Your order has been placed. Delivery normally lands in 1–5 minutes.');
+        }, 1400);
+      });
+    }
+  </script>
+</body>
+</html>
+

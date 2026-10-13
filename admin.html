@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lagos Life TopUp Hub — Admin</title>
+  <meta name="theme-color" content="#00ff66" />
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #0d0d0d;
+      --muted: #9aa3a0;
+      --text: #ebfff0;
+      --green: #00ff66;
+      --line: rgba(255,255,255,0.08);
+      --danger: #ff7373;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #000, #050505);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .wrap {
+      width: min(1200px, calc(100% - 26px));
+      margin: 18px auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 2.1rem);
+    }
+
+    .small { font-size: 12px; color: var(--muted); }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    input, select {
+      background: #070707;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      min-width: 160px;
+    }
+
+    button {
+      background: linear-gradient(180deg, var(--green) 0%, #0dcf63 100%);
+      border: none;
+      border-radius: 8px;
+      color: #02150b;
+      font-weight: 800;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    .danger {
+      background: var(--danger);
+      color: #340909;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--text);
+      font-size: 12px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .status {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      background: rgba(0,255,102,.08);
+      border: 1px solid rgba(0,255,102,.1);
+    }
+
+    .status.delivered {
+      color: #9af5bb;
+      background: rgba(0,255,102,.08);
+    }
+
+    .status.failed {
+      color: #ffc9c9;
+      background: rgba(255,115,115,.08);
+      border-color: rgba(255,115,115,.12);
+    }
+
+    .table-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead { display: none; }
+      tr {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      td {
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      td::before {
+        content: attr(data-label);
+        color: var(--text);
+        font-weight: 700;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Lagos Life TopUp Hub — Admin</h1>
+        <div class="small">Order tracking dashboard</div>
+      </div>
+
+      <div class="controls">
+        <input id="searchInput" type="text" placeholder="Search username, ID or ref" />
+        <select id="statusFilter">
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="delivered">Delivered</option>
+          <option value="failed">Failed</option>
+        </select>
+        <button id="refreshBtn">Refresh</button>
+        <button id="exportBtn">Export CSV</button>
+      </div>
+    </header>
+
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div><strong>Orders</strong><div class="small">Latest 100 orders</div></div>
+        <div class="small">Static demo admin panel</div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Ref</th>
+            <th>Username</th>
+            <th>Package</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const demoOrders = [
+      { ref: 'LL-1001', username: 'AkinBoss', playerId: 'GJ8723', package: 'VIP Pack - ₦7000', amount: 7000, payment: 'USDT', status: 'pending', time: '2026-10-13 14:35' },
+      { ref: 'LL-1002', username: 'ToluV', playerId: 'KT1142', package: 'Regular Pack - ₦2500', amount: 2500, payment: 'Opay', status: 'delivered', time: '2026-10-13 13:50' },
+      { ref: 'LL-1003', username: 'EmekaPro', playerId: 'PZ3361', package: 'VIP Pack - ₦10000', amount: 10000, payment: 'Palmpay', status: 'pending', time: '2026-10-13 12:18' },
+      { ref: 'LL-1004', username: 'KingKayo', playerId: 'EX2287', package: 'Regular Pack - ₦5000', amount: 5000, payment: 'Bank Transfer', status: 'failed', time: '2026-10-13 10:25' },
+      { ref: 'LL-1005', username: 'AyoPlay', playerId: 'FN7428', package: 'VIP Pack - ₦8000', amount: 8000, payment: 'USDT', status: 'pending', time: '2026-10-13 09:40' }
+    ];
+
+    const ordersBody = document.getElementById('ordersBody');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+
+    function renderOrders() {
+      const search = searchInput.value.trim().toLowerCase();
+      const status = statusFilter.value;
+
+      const filtered = demoOrders.filter((row) => {
+        const matchText = !search || [row.ref, row.username, row.playerId, row.package].join(' ').toLowerCase().includes(search);
+        const matchStatus = status === 'all' || row.status === status;
+        return matchText && matchStatus;
+      });
+
+      if (!filtered.length) {
+        ordersBody.innerHTML = '<tr><td colspan="8" style="padding:18px; color:var(--muted);">No matching orders</td></tr>';
+        return;
+      }
+
+      ordersBody.innerHTML = filtered.map((row) => {
+        const statusClass = row.status === 'delivered' ? 'delivered' : row.status === 'failed' ? 'failed' : '';
+        return `
+          <tr>
+            <td data-label="Ref">${row.ref}</td>
+            <td data-label="Username">${row.username}<div class="small">ID: ${row.playerId}</div></td>
+            <td data-label="Package">${row.package}</td>
+            <td data-label="Amount">₦${Number(row.amount).toLocaleString()}</td>
+            <td data-label="Payment">${row.payment}</td>
+            <td data-label="Status"><span class="status ${statusClass}">${row.status}</span></td>
+            <td data-label="Time">${row.time}</td>
+            <td data-label="Action">
+              <div class="table-actions">
+                <button type="button" onclick="markDelivered('${row.ref}')">Delivered</button>
+                <button type="button" class="danger" onclick="deleteOrder('${row.ref}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function markDelivered(ref) {
+      const row = demoOrders.find(r => r.ref === ref);
+      if (!row) return;
+      row.status = 'delivered';
+      renderOrders();
+    }
+
+    function deleteOrder(ref) {
+      const i = demoOrders.findIndex(r => r.ref === ref);
+      if (i >= 0) demoOrders.splice(i, 1);
+      renderOrders();
+    }
+
+    searchInput.addEventListener('input', renderOrders);
+    statusFilter.addEventListener('change', renderOrders);
+    document.getElementById('refreshBtn').addEventListener('click', renderOrders);
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const headers = ['Ref', 'Username', 'Player ID', 'Package', 'Amount', 'Payment', 'Status', 'Time'];
+      const csv = [headers.join(',')].concat(demoOrders.map((row) => [
+        row.ref,
+        row.username,
+        row.playerId,
+        row.package,
+        row.amount,
+        row.payment,
+        row.status,
+        row.time
+      ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','))).join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = 'lagos-life-orders.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    renderOrders();
+  </script>
+</body>
+</html>
